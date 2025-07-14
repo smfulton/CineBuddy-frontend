@@ -1,16 +1,38 @@
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import api from '../api/api';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState(''); // Backend expects username, not email
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleSubmit = e => {
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    // TODO: send request to backend and store JWT
-    console.log({ email, password });
+
+    try {
+      const response = await api.post('/auth/login', {
+        username,
+        password,
+      });
+
+      const { token } = response.data;
+
+      // Save token to context
+      login({ username, token });
+
+      // Redirect
+      navigate('/account');
+    } catch (err) {
+      setError('Invalid username or password');
+      console.error(err);
+    }
   };
 
   return (
@@ -18,10 +40,10 @@ const Login = () => {
       <h2 className="text-2xl font-semibold mb-6">Login to Cinebuddy</h2>
       <form onSubmit={handleSubmit}>
         <Input
-          label="Email"
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          label="Username"
+          type="text"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
         />
         <Input
           label="Password"
@@ -30,9 +52,9 @@ const Login = () => {
           onChange={e => setPassword(e.target.value)}
         />
         <Button>Login</Button>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
 
-      {/* Register link */}
       <p className="text-sm text-gray-600 mt-4">
         Don’t have an account?{' '}
         <Link to="/register" className="text-rose-600 hover:underline font-medium">

@@ -1,0 +1,32 @@
+.popular-slideshow-scrollbar {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 0.5rem; /* pb-2 */
+
+  /* Scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: #fbbf24 transparent; /* Tailwind yellow-400 */
+
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
+/* Webkit browsers */
+.popular-slideshow-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.popular-slideshow-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.popular-slideshow-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #fbbf24; /* Tailwind yellow-400 */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.3s;
+}
+
+.popular-slideshow-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #f59e0b; /* Tailwind yellow-500 */
+}

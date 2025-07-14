@@ -1,10 +1,10 @@
+import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-
-// Mock auth check - replace with real auth later
-const isAuthenticated = false; // change to true to test access
+import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = () => {
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  const { user } = useContext(AuthContext);
+  return user ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

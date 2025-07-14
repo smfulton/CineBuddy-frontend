@@ -1,13 +1,23 @@
-import Slideshow from '../components/Slideshow';
+import { useEffect, useState } from "react";
+import Slideshow from "../components/Slideshow/Slideshow";
+import axios from "axios";
+
 const Home = () => {
-  const mockMovies = [
-    { id: 1, title: "Shawshank Redemption" },
-    { id: 2, title: "Idiocracy" },
-    { id: 3, title: "Batman" },
-    { id: 4, title: "Cars" },
-    { id: 5, title: "Cars 2" },
-    { id: 6, title: "Cars 3" },
-  ];
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/movies/trending")
+      .then((res) => {
+        setMovies(res.data.results); // `results` contains the array of movies
+      })
+      .catch((err) => {
+        console.error("Failed to fetch trending movies", err);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="text-center mt-20 text-white">
       <h1 className="text-5xl font-extrabold mb-6">
@@ -28,7 +38,11 @@ const Home = () => {
       </div>
 
       {/* 🔥 Slideshow Component */}
-      <Slideshow movies={mockMovies} />
+      {loading ? (
+        <p className="mt-10 text-gray-400">Loading trending movies...</p>
+      ) : (
+        <Slideshow movies={movies} />
+      )}
     </div>
   );
 };
